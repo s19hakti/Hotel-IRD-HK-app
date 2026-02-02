@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Hotel Staff Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* LANDING PAGE */
+        .page {
+            min-height: 100vh;
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .landing-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .landing-container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-content {
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .features {
+            display: grid;
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-icon {
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .login-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-card h2 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        .login-card > p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 13px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary,
+        .btn-demo {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-demo {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+            margin-top: 12px;
+        }
+
+        .btn-primary:active,
+        .btn-demo:active {
+            transform: scale(0.98);
+        }
+
+        /* DASHBOARD */
+        .dashboard-page {
+            background: #f5f5f5;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h1 {
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-details {
+            display: none;
+        }
+
+        .notification-badge {
+            position: relative;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .dashboard-content {
+            padding: 15px;
+            padding-bottom: 80px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .requests-section {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .request-card {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+
+        .request-card.ird {
+            border-left-color: #ff6b6b;
+        }
+
+        .request-card.hk {
+            border-left-color: #4ecdc4;
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .room-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .request-type {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .request-type.ird {
+            background: #ff6b6b;
+        }
+
+        .request-type.hk {
+            background: #4ecdc4;
+        }
+
+        .request-details p {
+            color: #666;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .request-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: #999;
+            margin: 12px 0;
+        }
+
+        .request-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-accept,
+        .btn-complete {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn-accept {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-complete {
+            background: #667eea;
+            color: white;
+        }
+
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-accepted {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            cursor: pointer;
+            color: #999;
+            font-size: 11px;
+            border: none;
+            background: none;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-item span {
+            font-size: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* REPORTS */
+        .reports-section {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .report-filters {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .btn-export {
+            flex: 1;
+            padding: 10px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .landing-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content {
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .login-card {
+                padding: 25px 20px;
+            }
+
+            .user-details {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .user-details {
+                display: block;
+            }
+
+            .bottom-nav {
+                display: none !important;
+            }
+
+            .dashboard-content {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 30px;
+                padding-bottom: 30px;
+            }
+
+            .request-actions {
+                flex-direction: row;
+            }
+
+            .btn-accept,
+            .btn-complete {
+                width: auto;
+                padding: 10px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LANDING PAGE -->
+    <div id="landingPage" class="page active">
+        <div class="landing-page">
+            <div class="landing-container">
+                <div class="hero-content">
+                    <h1>🏨 Hotel Staff Portal</h1>
+                    <p>AI-powered guest service management for IRD and HK requests.</p>
+                    
+                    <div class="features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🤖</div>
+                            <div>
+                                <strong>AI-Powered</strong>
+                                <p style="margin: 0; font-size: 0.85rem; opacity: 0.8;">Automated calls</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">⚡</div>
+                            <div>
+                                <strong>Real-Time</strong>
+                                <p style="margin: 0; font-size: 0.85rem; opacity: 0.8;">Instant alerts</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📊</div>
+                            <div>
+                                <strong>Analytics</strong>
+                                <p style="margin: 0; font-size: 0.85rem; opacity: 0.8;">Track performance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="login-card">
+                    <h2>Staff Login</h2>
+                    <p>Access your dashboard</p>
+                    
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label>Employee ID</label>
+                            <input type="text" id="employeeId" placeholder="Enter ID" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="password" placeholder="Password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Department</label>
+                            <select id="department" required>
+                                <option value="">Select</option>
+                                <option value="ird">In-Room Dining</option>
+                                <option value="hk">Housekeeping</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Floor</label>
+                            <select id="floor" required>
+                                <option value="">Select</option>
+                                <option value="1">Floor 1</option>
+                                <option value="2">Floor 2</option>
+                                <option value="3">Floor 3</option>
+                                <option value="4">Floor 4</option>
+                                <option value="5">Floor 5</option>
+                                <option value="all">All Floors</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Login</button>
+                        <button type="button" class="btn-demo" onclick="quickLogin()">Quick Demo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboardPage" class="page dashboard-page">
+        <div class="dashboard-header">
+            <div class="header-top">
+                <h1 id="dashboardTitle">Dashboard</h1>
+                <div class="user-info">
+                    <div class="notification-badge">
+                        <span>🔔</span>
+                        <span class="notification-count" id="notificationCount">0</span>
+                    </div>
+                    <div class="user-details">
+                        <div style="font-weight: 600; color: #333; font-size: 0.9rem;" id="userName">Staff</div>
+                        <div style="font-size: 0.75rem; color: #999;" id="userRole">Dept</div>
+                    </div>
+                    <div class="user-avatar" id="userAvatar">S</div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Pending</h3>
+                    <div class="stat-value" id="pendingCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>In Progress</h3>
+                    <div class="stat-value" id="inProgressCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed</h3>
+                    <div class="stat-value" id="completedCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Avg Time</h3>
+                    <div class="stat-value" id="avgTime">0<span style="font-size: 0.8rem;">m</span></div>
+                </div>
+            </div>
+
+            <!-- REQUESTS -->
+            <div class="requests-section" id="requestsSection">
+                <div class="section-header">
+                    <h2>Active Requests</h2>
+                    <div class="filter-tabs">
+                        <button class="tab-btn active" onclick="filterRequests('all', this)">All</button>
+                        <button class="tab-btn" onclick="filterRequests('pending', this)">Pending</button>
+                        <button class="tab-btn" onclick="filterRequests('accepted', this)">In Progress</button>
+                        <button class="tab-btn" onclick="filterRequests('completed', this)">Completed</button>
+                    </div>
+                </div>
+                <div id="requestsList"></div>
+            </div>
+
+            <!-- REPORTS -->
+            <div class="reports-section hidden" id="reportsSection">
+                <div class="section-header">
+                    <h2>📊 Reports</h2>
+                </div>
+                <div class="report-filters">
+                    <div class="form-group">
+                        <label>Date Range</label>
+                        <select>
+                            <option>Today</option>
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="export-buttons">
+                    <button class="btn-export" onclick="alert('Exporting Excel...')">📥 Excel</button>
+                    <button class="btn-export" onclick="alert('Exporting PDF...')">📄 PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <nav class="bottom-nav" id="bottomNav">
+            <button class="nav-item active" onclick="showSection('requests', this)">
+                <span>📋</span>
+                <div>Requests</div>
+            </button>
+            <button class="nav-item" onclick="showSection('stats', this)">
+                <span>📊</span>
+                <div>Stats</div>
+            </button>
+            <button class="nav-item hidden" id="reportsNavBtn" onclick="showSection('reports', this)">
+                <span>📈</span>
+                <div>Reports</div>
+            </button>
+            <button class="nav-item" onclick="showSection('profile', this)">
+                <span>👤</span>
+                <div>Profile</div>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let requests = [];
+        let currentFilter = 'all';
+
+        // SAMPLE DATA
+        function initData() {
+            requests = [
+                {
+                    id: 'REQ001',
+                    roomNumber: '305',
+                    floor: 3,
+                    type: 'ird',
+                    items: ['Club Sandwich', 'Fries'],
+                    requestTime: new Date(Date.now() - 5 * 60000),
+                    acceptedTime: null,
+                    completedTime: null,
+                    status: 'pending',
+                    guestName: 'Mr. Johnson'
+                },
+                {
+                    id: 'REQ002',
+                    roomNumber: '412',
+                    floor: 4,
+                    type: 'hk',
+                    items: ['Towels', 'Pillows'],
+                    requestTime: new Date(Date.now() - 10 * 60000),
+                    acceptedTime: new Date(Date.now() - 8 * 60000),
+                    completedTime: null,
+                    status: 'accepted',
+                    guestName: 'Ms. Smith'
+                },
+                {
+                    id: 'REQ003',
+                    roomNumber: '208',
+                    floor: 2,
+                    type: 'ird',
+                    items: ['Caesar Salad'],
+                    requestTime: new Date(Date.now() - 45 * 60000),
+                    acceptedTime: new Date(Date.now() - 40 * 60000),
+                    completedTime: new Date(Date.now() - 10 * 60000),
+                    status: 'completed',
+                    guestName: 'Dr. Williams'
+                }
+            ];
+            updateDashboard();
+        }
+
+        // QUICK LOGIN
+        function quickLogin() {
+            document.getElementById('employeeId').value = 'DEMO001';
+            document.getElementById('password').value = 'password';
+            document.getElementById('department').value = 'ird';
+            document.getElementById('floor').value = '3';
+        }
+
+        // LOGIN FORM
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const employeeId = document.getElementById('employeeId').value;
+            const department = document.getElementById('department').value;
+            const floor = document.getElementById('floor').value;
+
+            currentUser = {
+                employeeId,
+                department,
+                floor
+            };
+
+            // Switch pages
+            document.getElementById('landingPage').classList.remove('active');
+            document.getElementById('dashboardPage').classList.add('active');
+
+            // Update UI
+            document.getElementById('userName').textContent = employeeId;
+            document.getElementById('userRole').textContent = department.toUpperCase() + ' - Floor ' + floor;
+            document.getElementById('userAvatar').textContent = employeeId[0].toUpperCase();
+
+            if (department === 'admin') {
+                document.getElementById('reportsSection').classList.remove('hidden');
+                document.getElementById('reportsNavBtn').classList.remove('hidden');
+                document.getElementById('dashboardTitle').textContent = 'Admin Dashboard';
+            }
+
+            initData();
+        });
+
+        // UPDATE DASHBOARD
+        function updateDashboard() {
+            let filtered = requests;
+            
+            if (currentUser.floor !== 'all') {
+                filtered = filtered.filter(r => r.floor == currentUser.floor);
+            }
+            if (currentUser.department !== 'admin') {
+                filtered = filtered.filter(r => r.type === currentUser.department);
+            }
+
+            const pending = filtered.filter(r => r.status === 'pending').length;
+            const inProgress = filtered.filter(r => r.status === 'accepted').length;
+            const completed = filtered.filter(r => r.status === 'completed').length;
+
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('inProgressCount').textContent = inProgress;
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('notificationCount').textContent = pending;
+
+            const completedReqs = filtered.filter(r => r.completedTime);
+            if (completedReqs.length > 0) {
+                const avg = completedReqs.reduce((acc, r) => 
+                    acc + (r.completedTime - r.requestTime) / 60000, 0) / completedReqs.length;
+                document.getElementById('avgTime').innerHTML = 
+                    Math.round(avg) + '<span style="font-size: 0.8rem;">m</span>';
+            }
+
+            renderRequests(filtered);
+        }
+
+        // RENDER REQUESTS
+        function renderRequests(reqs) {
+            if (currentFilter !== 'all') {
+                reqs = reqs.filter(r => r.status === currentFilter);
+            }
+
+            const container = document.getElementById('requestsList');
+            
+            if (reqs.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>No requests</h3><p>All clear!</p></div>';
+                return;
+            }
+
+            container.innerHTML = reqs.map(r => `
+                <div class="request-card ${r.type}">
+                    <div class="request-header">
+                        <div>
+                            <div class="room-number">Room ${r.roomNumber}</div>
+                            <div style="color: #666; font-size: 0.85rem;">Floor ${r.floor} • ${r.guestName}</div>
+                        </div>
+                        <span class="request-type ${r.type}">${r.type.toUpperCase()}</span>
+                    </div>
+                    <div class="request-details">
+                        <p><strong>Items:</strong> ${r.items.join(', ')}</p>
+                    </div>
+                    <div class="request-meta">
+                        <span>🕐 ${formatTime(r.requestTime)}</span>
+                    </div>
+                    ${r.status === 'pending' ? `
+                        <div class="request-actions">
+                            <button class="btn-accept" onclick="acceptRequest('${r.id}')">Accept</button>
+                        </div>
+                    ` : ''}
+                    ${r.status === 'accepted' ? `
+                        <div class="request-actions">
+                            <span class="status-badge status-accepted">In Progress</span>
+                            <button class="btn-complete" onclick="completeRequest('${r.id}')">Complete</button>
+                        </div>
+                    ` : ''}
+                    ${r.status === 'completed' ? `
+                        <span class="status-badge status-completed">✓ Completed</span>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // ACCEPT REQUEST
+        function acceptRequest(id) {
+            const req = requests.find(r => r.id === id);
+            if (req) {
+                req.status = 'accepted';
+                req.acceptedTime = new Date();
+                updateDashboard();
+                showToast('Request accepted!');
+            }
+        }
+
+        // COMPLETE REQUEST
+        function completeRequest(id) {
+            const req = requests.find(r => r.id === id);
+            if (req) {
+                req.status = 'completed';
+                req.completedTime = new Date();
+                updateDashboard();
+                showToast('Request completed!');
+            }
+        }
+
+        // FILTER
+        function filterRequests(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateDashboard();
+        }
+
+        // NAV
+        function showSection(section, btn) {
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            if (section === 'requests') {
+                document.getElementById('requestsSection').classList.remove('hidden');
+                document.getElementById('reportsSection').classList.add('hidden');
+            } else if (section === 'reports') {
+                document.getElementById('requestsSection').classList.add('hidden');
+                document.getElementById('reportsSection').classList.remove('hidden');
+            } else if (section === 'stats') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (section === 'profile') {
+                alert('Profile - Coming soon!');
+            }
+        }
+
+        // LOGOUT
+        function logout() {
+            if (confirm('Logout?')) {
+                document.getElementById('dashboardPage').classList.remove('active');
+                document.getElementById('landingPage').classList.add('active');
+                document.getElementById('loginForm').reset();
+                currentUser = null;
+            }
+        }
+
+        // TOAST
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 24px; border-radius: 25px; font-size: 14px; z-index: 1000;';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // UTILS
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Auto-refresh
+        setInterval(() => {
+            if (currentUser && Math.random() > 0.98) {
+                requests.unshift({
+                    id: 'REQ' + (requests.length + 1).toString().padStart(3, '0'),
+                    roomNumber: Math.floor(Math.random() * 500 + 100).toString(),
+                    floor: Math.floor(Math.random() * 5 + 1),
+                    type: Math.random() > 0.5 ? 'ird' : 'hk',
+                    items: ['New Request'],
+                    requestTime: new Date(),
+                    status: 'pending',
+                    guestName: 'Guest'
+                });
+                updateDashboard();
+                showToast('🔔 New request!');
+            }
+        }, 8000);
+    </script>
+</body>
+</html>
